@@ -1,0 +1,32 @@
+{
+	"version": 1,
+	"routes": [
+		{
+			"path": "/_astro/*",
+			"target": {
+				"kind": "Static"
+			}
+		},
+		{
+			"path": "/*",
+			"target": {
+				"kind": "Static"
+			},
+			"fallback": {
+				"kind": "Compute",
+				"src": "default"
+			}
+		}
+	],
+	"computeResources": [
+		{
+			"name": "default",
+			"entrypoint": "server.mjs",
+			"runtime": "nodejs20.x"
+		}
+	],
+	"framework": {
+		"name": "astro",
+		"version": "5.9.3"
+	}
+}

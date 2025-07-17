@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci -omit=dev --ignore-scripts
+        - du -sm node_modules
+    build:
+      commands:
+        - env >> .env
+        - npm run build
+        - mkdir -p .amplify-hosting/compute
+        - mv dist/client .amplify-hosting/static
+        - mv dist/server .amplify-hosting/compute/default
+        - cp deploy-manifest.json .amplify-hosting/deploy-manifest.json
+        - bash delete-module.sh
+        - cp -r node_modules .amplify-hosting/compute/default/node_modules
+        - mv .env .amplify-hosting/compute/default/.env
+        - find .amplify-hosting/compute/default \( -path ".amplify-hosting/compute/default/node_modules" \) -prune -o -type f -printf "%s bytes\t%p\n"
+        - du -sm .amplify-hosting/compute/default
+        - du -sm .amplify-hosting/compute/default/node_modules
+  artifacts:
+    baseDirectory: .amplify-hosting
+    files:
+      - "**/*"
